@@ -153,3 +153,10 @@ def create_next_page_request(resource_type, request, response):
        return youtube.playlistItems().list_next(request, response)
    else:
        raise ValueError("Expected resource_type \"playlist\" or \"playlistItem\"")
+
+def create_video_list_request(id):
+    return youtube.videos().list(
+        part="contentDetails",
+        fields="items(contentDetails/regionRestriction)",
+        id=id
+    )
