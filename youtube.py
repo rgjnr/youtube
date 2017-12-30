@@ -135,7 +135,7 @@ def create_video_search_request(video_title):
 
 def create_playlist_items_insert_request(playlist_id, position, new_video_id):
     return youtube.playlistItems().insert(
-       part="contentDetails,id,snippet,snippet",
+       part="contentDetails,id,snippet",
        body={
            "kind": "youtube#playlistItem",
            "snippet": {
