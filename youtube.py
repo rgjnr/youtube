@@ -7,28 +7,34 @@ from oauth2client.file import Storage
 from oauth2client.tools import run_flow
 
 # Creates the resource object for interacting with the YouTube API
-# Sets up OAuth 2.0 for authorized requests if necessary
-def create_resource_object(id, username, arguments):
+# Uses developer API key as authorizaiton method for requesting user's non-private data
+def create_resource_object_using_key():
     global youtube
 
-    if (id or username):
-        youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-            developerKey=DEVELOPER_KEY)
-    else:
-        flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
-            message=MISSING_CLIENT_SECRETS_MESSAGE,
-            scope=YOUTUBE_READONLY_SCOPE)
+    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+        developerKey=DEVELOPER_KEY)
 
-        storage = Storage("%s-oauth2.json" % sys.argv[0])
-        credentials = storage.get()
+    return youtube
 
-        if credentials is None or credentials.invalid:
-            credentials = run_flow(flow, storage, arguments)
-        elif credentials.access_token_expired:
-            credentials.refresh(httplib2.Http())
+# Creates the resource object for interacting with the YouTube API
+# Uses OAuth 2.0 as authorization method for requesting user's private data
+def create_resource_object_using_oauth2(arguments):
+    global youtube
 
-        youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
-            http=credentials.authorize(httplib2.Http()))
+    flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
+        message=MISSING_CLIENT_SECRETS_MESSAGE,
+        scope=['https://www.googleapis.com/auth/youtube'])
+
+    storage = Storage("%s-oauth2.json" % sys.argv[0])
+    credentials = storage.get()
+
+    if credentials is None or credentials.invalid:
+        credentials = run_flow(flow, storage, arguments)
+    elif credentials.access_token_expired:
+        credentials.refresh(httplib2.Http())
+
+    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+        http=credentials.authorize(httplib2.Http()))
 
     return youtube
 
