@@ -125,7 +125,7 @@ def create_related_request(channel_request):
 def create_playlist_items_request(playlist_id):
     return youtube.playlistItems().list(
         part="snippet,status",
-        fields="items(snippet/title,snippet/resourceId/videoId,status),nextPageToken",
+        fields="items(snippet/title,snippet/resourceId/videoId,snippet/position,status),nextPageToken",
         playlistId=playlist_id,
         maxResults=VIDEO_SEARCH_MAX_RESULTS
    )
