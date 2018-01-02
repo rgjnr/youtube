@@ -143,11 +143,13 @@ def create_playlist_items_insert_request(playlist_id, position, new_video_id):
     return youtube.playlistItems().insert(
        part="contentDetails,id,snippet",
        body={
-           "kind": "youtube#playlistItem",
            "snippet": {
                "playlistId": playlist_id,
                "position": position,
-               "resourceId": new_video_id,
+               "resourceId": {
+                    "kind": "youtube#video",
+                    "videoId": new_video_id
+                }
            }
        }
    )
