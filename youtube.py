@@ -154,6 +154,11 @@ def create_playlist_items_insert_request(playlist_id, position, new_video_id):
        }
    )
 
+def create_playlist_items_delete_request(playlist_item_id):
+    return youtube.playlistItems().delete(
+        id=playlist_item_id
+    )
+
 def create_next_page_request(resource_type, request, response):
    if resource_type == "playlist":
        return youtube.playlists().list_next(request, response)
