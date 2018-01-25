@@ -169,7 +169,7 @@ def create_next_page_request(resource_type, request, response):
 
 def create_video_list_request(id):
     return youtube.videos().list(
-        part="contentDetails,snippet",
-        fields="items(contentDetails/regionRestriction,snippet/title)",
+        part="contentDetails,id,snippet",
+        fields="items(id,contentDetails/regionRestriction,snippet/title)",
         id=id
     )
